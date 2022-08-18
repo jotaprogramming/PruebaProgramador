@@ -1,5 +1,6 @@
 :root{
     --primary-color: rgb(40, 161, 90);
+    --secondary-color: rgb(30, 124, 69);
 }
 *{
     margin: 0;
@@ -9,13 +10,13 @@
 }
 body{
     min-height: 100vh;
+    overflow-x:hidden;
 }
 a{
     text-decoration: none;
 }
 /* main */
 .index-container,
-.index-container__products,
 .card__body{
     display: flex;
     flex-direction: column;
@@ -26,7 +27,21 @@ a{
     height: 100%;
 }
 .index-container__products{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
     width: 100%;
-    padding: 0 5rem;
+    padding: 0 10rem;
     align-items: center;
+    justify-content: center;
+}
+@media (max-width: 700px){
+    .index-container__products{
+        padding: 0 2rem;
+    }
+}
+.index-container__inactive{
+    overflow-y: hidden;
+    height: calc(100vh - 80px);
 }

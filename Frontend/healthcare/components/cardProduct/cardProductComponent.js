@@ -7,13 +7,13 @@ class cardProduct extends HTMLElement {
 		this.summary;
 		this.path;
 		this.price;
+		this.stock;
 	}
 	static get observedAttributes() {
-		return ['id', 'summary', 'path', 'description', 'price'];
+		return ['id', 'summary', 'path', 'description', 'price', 'stock'];
 	}
 	attributeChangedCallback(attr, oldVal, newVal) {
 		if (newVal != oldVal) {
-			console.log(newVal);
 			switch (attr) {
 				case 'id':
 					this.id = newVal;
@@ -26,6 +26,9 @@ class cardProduct extends HTMLElement {
 					break;
 				case 'price':
 					this.price = newVal;
+					break;
+				case 'stock':
+					this.stock = newVal;
 					break;
 			}
 		}
@@ -41,9 +44,9 @@ class cardProduct extends HTMLElement {
                 <span class="card__price">$ ${this.price}</span>
                 <div class="card__cart">
                     <div class="cart__quantity">
-                        <button class="quantity__item btn"><i class="fa-solid fa-minus" type="button"></i></button>
-                        <span type="number" class="quantity__item" id="quantity">1</span>
-                        <button class="quantity__item btn"><i class="fa-solid fa-plus" type="button"></i></button>
+                        <button class="quantity__item btn" id="decrease"><i class="fa-solid fa-minus" type="button"></i></button>
+                        <span type="number" class="quantity__item" id="quantity" min="1" max="${this.stock}">1</span>
+                        <button class="quantity__item btn" id="increase"><i class="fa-solid fa-plus" type="button"></i></button>
                     </div>
                     <button class="cart__addtocart btn" type="button" id="addtocart">
                         Añadir al carrito

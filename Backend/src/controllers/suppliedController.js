@@ -1,7 +1,7 @@
 const defaultController = require('./defaultController.js');
 
 const controller = {};
-const table = 'product';
+const table = 'supplied';
 
 // Display a listing of the resource.
 controller.index = (req, res) => {

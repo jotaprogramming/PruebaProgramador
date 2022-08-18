@@ -1,20 +1,14 @@
 // Import modules
-const { Router } = require('express');
-const { body } = require('express-validator');
+const {Router} = require('express');
 const router = Router();
 
 // Import controllers
-const controller = require('../controllers/productController.js');
+const controller = require('../controllers/cartController.js');
 
 router.get('/', controller.index);
+router.post('/:status', controller.show);
 // router.get('/add', controller.create);
-router.post(
-	'/add',
-	body('summary').isLength({ min: 2 }),
-	body('price').isInt({ min: 50 }),
-	body('stock').isInt({ min: 0 }),
-	controller.store
-);
+router.post('/add', controller.store);
 // router.get('/update/:id', controller.edit);
 router.post('/update/:id', controller.update);
 router.get('/delete/:id', controller.destroy);

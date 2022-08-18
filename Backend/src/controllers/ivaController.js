@@ -1,7 +1,7 @@
 const defaultController = require('./defaultController.js');
 
 const controller = {};
-const table = 'product';
+const table = 'iva';
 
 // Display a listing of the resource.
 controller.index = (req, res) => {
@@ -13,7 +13,7 @@ controller.create = (req, res) => {
 };
 // Store a newly created resource in storage.
 controller.store = (req, res) => {
-	defaultController.Store(req, res, table);
+	//
 };
 // Display the specified resource.
 controller.show = (req, res) => {
@@ -29,7 +29,7 @@ controller.update = (req, res) => {
 };
 // Remove the specified resource from storage.
 controller.destroy = (req, res) => {
-	defaultController.Destroy(req, res, table);
+	//
 };
 
 module.exports = controller;

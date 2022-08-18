@@ -13,13 +13,51 @@
     text-transform: uppercase;
     color: white;
 }
-.index-header__navbar{
+.index-header__navbar,
+.index-header__tail{
     display: flex;
     gap: 3rem;
 }
 .navbar__item{
+    cursor: pointer;
+}
+.navbar__item,
+.index-header__menu{
     background-color: transparent;
     border: none;
     color: white;
     font-size: 1.3rem;
+}
+.index-header__menu{
+    display: none;
+}
+.active-navbar{
+    display: flex !important;
+    transform: translateX(0) !important;
+}
+@media (max-width: 500px) {
+    .index-header__menu{
+        display: flex;
+    }
+    .index-header__navbar{
+        /* display: none; */
+        transform: translateX(100%);
+        position: absolute;
+        left: 0;
+        top: 80px;
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        justify-content: center;
+        transition: transform 150ms ease-out;
+    }
+    .index-header{
+        padding: 1rem 2rem;
+    }
+}
+
+@media (max-width: 370px) {
+    .index-header{
+        padding: 1rem 1rem;
+    }
 }
