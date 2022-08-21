@@ -7,9 +7,22 @@ const table = 'product_order';
 controller.index = (req, res) => {
 	defaultController.Index(req, res, table);
 };
-// Show the form for creating a new resource.
-controller.create = (req, res) => {
-	//
+// Creates a new record with the status of the active order
+controller.create = async (req, res, data) => {
+	// res.json(data);
+	req.getConnection((err, conn) => {
+		if (err) {
+			res.status(400).json(err);
+			return;
+		}
+		conn.query(`INSERT INTO ${table} SET ?`, [data], (err, rows) => {
+			if (err) {
+				res.status(400).json(err);
+				return;
+			}
+			return true;
+		});
+	});
 };
 // Store a newly created resource in storage.
 controller.store = (req, res) => {
@@ -17,7 +30,7 @@ controller.store = (req, res) => {
 };
 // Display the specified resource.
 controller.show = (req, res) => {
-	
+	//
 };
 // Show the form for editing the specified resource.
 controller.edit = (req, res) => {

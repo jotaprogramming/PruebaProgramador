@@ -34,6 +34,7 @@
 .active-navbar{
     display: flex !important;
     transform: translateX(0) !important;
+    z-index: 2;
 }
 @media (max-width: 500px) {
     .index-header__menu{
@@ -44,12 +45,12 @@
         transform: translateX(100%);
         position: absolute;
         left: 0;
-        top: 80px;
+        top: 79.5px;
         width: 100%;
         padding: 1rem;
         background-color: var(--primary-color);
         justify-content: center;
-        transition: transform 150ms ease-out;
+        transition: transform 150ms ease-in-out;
     }
     .index-header{
         padding: 1rem 2rem;

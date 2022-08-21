@@ -1,5 +1,8 @@
 const moment = require('moment');
+
+// Import controllers
 const defaultController = require('./defaultController.js');
+const orderController = require('./orderController.js');
 
 const controller = {};
 const table = 'shopping_cart';
@@ -7,80 +10,128 @@ const table = 'shopping_cart';
 // Display a listing of the resource.
 controller.index = (req, res) => {
 	defaultController.Index(req, res, table);
+	// req.getConnection((err, conn) => {
+	// 	if (err) {
+	// 		res.status(400).json(err);
+	// 		return;
+	// 	}
+	// 	conn.query(
+	// 		`SELECT id_product, SUM(quantity), id_order FROM ${table} GROUP BY id_product AND id_order`,
+	// 		(err, data) => {
+	// 			if (err) {
+	// 				res.status(400).json(err);
+	// 				return;
+	// 			}
+	// 			res.status(202).json(data);
+	// 		}
+	// 	);
+	// });
 };
 // Show the form for creating a new resource.
 controller.create = (req, res) => {
 	//
 };
-// Store a newly created resource in storage.
-controller.store = (req, res) => {
+// Verify that there is an active order, and if there is not, create it.
+controller.status = (req, res) => {
 	const data = req.body;
+	req.getConnection((err, conn) => {
+		if (err) {
+			res.status(400).json(err);
+			return;
+		}
+		conn.query(
+			`SELECT id FROM product_order WHERE status = 1`,
+			(err, rows) => {
+				if (err) {
+					res.status(400).json(err);
+					return;
+				}
+				if (rows.length) {
+					let body = Object.assign(data, {
+						id_order: rows[0].id,
+					});
+					controller.VerifyQuantityStock(req, res, data);
+				} else {
+					const orderCreate = orderController.create(req, res, {
+						date: new Date(),
+						status: true,
+					});
+					if (orderCreate) {
+						controller.status(req, res);
+					}
+				}
+			}
+		);
+	});
+};
+controller.VerifyQuantityStock = (req, res, data) => {
+	req.getConnection((err, conn) => {
+		if (err) {
+			res.status(400).json(err);
+			return;
+		}
+		conn.query(
+			`SELECT stock FROM product WHERE id = ${data.id_product}`,
+			(err, rows) => {
+				if (err) {
+					res.status(400).json(err);
+					return;
+				}
+				const stock = parseInt(rows[0].stock);
+				const quantity = parseInt(data.quantity);
+				if (quantity <= stock) {
+					controller.store(req, res, data);
+				} else {
+					res.status(400).json({
+						error: 'Quantity exceeds product stock',
+					});
+				}
+			}
+		);
+	});
+};
+// Store a newly created resource in storage.
+controller.store = (req, res, data) => {
+	req.getConnection((err, conn) => {
+		if (err) {
+			res.status(400).json(err);
+			return;
+		}
+		conn.query(`INSERT INTO ${table} SET ?`, [data], (err, rows) => {
+			if (err) {
+				res.status(400).json(err);
+				return;
+			}
+			res.status(202).json({
+				msg: 'saved',
+				table: `${table}`,
+				data: data,
+			});
+		});
+	});
+};
+// Display the specified resource.
+controller.show = (req, res) => {
+	const { status } = req.params;
 	req.getConnection((err, conn) => {
 		if (err) {
 			res.status(400).json(err);
 		} else {
 			conn.query(
-				`SELECT DISTINCT po.status, po.date
-				FROM product_order AS po
-				LEFT JOIN shopping_cart AS sc ON sc.id_order = po.id
-				WHERE sc.id_order = ${data.id_order}`,
-				(err, rows) => {
-					if (rows.length) {
-						const DATE = moment(rows[0].date);
-						if (rows[0].status == 1) {
-							defaultController.Store(req, res, table);
-						} else {
-							res.status(200).json({
-								msg: `It was not possible to continue because the order ended`,
-								date: `${DATE.format('YYYY-MM-DD')}`,
-							});
-						}
-					} else {
-						conn.query(
-							`INSERT INTO product_order SET date = ?, status = ?`,
-							[new Date(), 1],
-							(err, rows) => {
-								if (err) {
-									console.log(err);
-								} else {
-									console.log({
-										msg: 'saved',
-										table: `${table}`,
-										data: data,
-									});
-								}
-							}
-						);
-						defaultController.Store(req, res, table);
+				`SELECT sc.id_product, sc.id_order, SUM(sc.quantity) AS quantity, p.summary, p.image_path, p.price, po.date, po.status
+				FROM shopping_cart AS sc
+				JOIN product AS p ON p.id = sc.id_product
+				JOIN product_order AS po ON po.id = sc.id_order
+				WHERE status = ${status}
+				GROUP BY id_product`,
+				(err, data) => {
+					if (err) {
+						res.status(400).json(err);
+						return;
 					}
+					res.json(data);
 				}
 			);
-		}
-	});
-};
-// Display the specified resource.
-controller.show = (req, res) => {
-	const {status} = req.params;
-	req.getConnection((err, conn) => {
-		if (err) {
-			res.status(400).json(err);
-		} else {
-			conn.query(`SELECT p.id AS product_id, p.image_path, p.price, p.summary, p.id_iva, sc.*, po.date, po.status
-			FROM ${table} AS sc
-			JOIN product_order AS po ON po.id = sc.id_order
-			JOIN product AS p ON p.id = sc.id_product
-			WHERE po.status = ${status}`, (err, data) => {
-				if (err) {
-					res.status(400).json(err);
-				} else if (data.length) {
-					res.json(data);
-				} else {
-					res.json({
-						msg: 'Table without records',
-						table: `${table}`,
-					});
-				}
-			});
 		}
 	});
 };

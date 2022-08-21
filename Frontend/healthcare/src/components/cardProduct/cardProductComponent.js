@@ -8,6 +8,8 @@ class cardProduct extends HTMLElement {
 		this.path;
 		this.price;
 		this.stock;
+		this.min = 1;
+		this.cartTemplate;
 	}
 	static get observedAttributes() {
 		return ['id', 'summary', 'path', 'description', 'price', 'stock'];
@@ -33,7 +35,25 @@ class cardProduct extends HTMLElement {
 			}
 		}
 	}
+	get CartTemplate() {
+		return `<div class="card__cart">
+			<div class="cart__quantity">
+				<button class="quantity__item btn" id="decrease"><i class="fa-solid fa-minus" type="button"></i></button>
+				<span type="number" class="quantity__item" id="quantity" min="${this.min}" max="${this.stock}">${this.min}</span>
+				<button class="quantity__item btn" id="increase"><i class="fa-solid fa-plus" type="button"></i></button>
+			</div>
+			<button class="cart__addtocart btn" type="button" id="${this.id}">
+				Añadir al carrito
+			</button>
+		</div>`;
+	}
 	connectedCallback() {
+		if (this.stock == 0) {
+			this.min = 0;
+			this.cartTemplate = `<div class="soldout">Sin stock disponible</div>`
+		} else {
+			this.cartTemplate = this.CartTemplate;
+		}
 		this.innerHTML = `
         <div class="product__card" id="${this.id}">
             <figure class="card__header">
@@ -42,16 +62,7 @@ class cardProduct extends HTMLElement {
             <div class="card__body">
                 <h2 class="card__title">${this.summary}</h2>
                 <span class="card__price">$ ${this.price}</span>
-                <div class="card__cart">
-                    <div class="cart__quantity">
-                        <button class="quantity__item btn" id="decrease"><i class="fa-solid fa-minus" type="button"></i></button>
-                        <span type="number" class="quantity__item" id="quantity" min="1" max="${this.stock}">1</span>
-                        <button class="quantity__item btn" id="increase"><i class="fa-solid fa-plus" type="button"></i></button>
-                    </div>
-                    <button class="cart__addtocart btn" type="button" id="addtocart">
-                        Añadir al carrito
-                    </button>
-                </div>
+                ${this.cartTemplate}
             </div>
         </div>
         `;

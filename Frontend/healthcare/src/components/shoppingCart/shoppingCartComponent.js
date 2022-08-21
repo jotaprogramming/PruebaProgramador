@@ -1,4 +1,4 @@
-import { GetShoppingCart } from '../../src/service/apiService.js';
+import { GetShoppingCart } from '../../service/apiService.js';
 import './style.css';
 
 class shoppingCart extends HTMLElement {

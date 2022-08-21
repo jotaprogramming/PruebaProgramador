@@ -12,14 +12,9 @@ defaultController.Index = (req, res, table) => {
 			conn.query(`SELECT * FROM ${table}`, (err, data) => {
 				if (err) {
 					res.status(400).json(err);
-				} else if (data.length) {
-					res.json(data);
-				} else {
-					res.json({
-						msg: 'Table without records',
-						table: `${table}`,
-					});
-				}
+					return
+				} 
+				res.json(data);
 			});
 		}
 	});
