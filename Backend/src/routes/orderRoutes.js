@@ -6,10 +6,7 @@ const router = Router();
 const controller = require('../controllers/orderController.js');
 
 router.get('/', controller.index);
-// router.get('/add', controller.create);
 router.post('/add', controller.store);
-// router.get('/update/:id', controller.edit);
 router.post('/update/:id', controller.update);
-// router.get('/delete/:id', controller.destroy);
 
 module.exports = router;

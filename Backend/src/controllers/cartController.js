@@ -10,26 +10,6 @@ const table = 'shopping_cart';
 // Display a listing of the resource.
 controller.index = (req, res) => {
 	defaultController.Index(req, res, table);
-	// req.getConnection((err, conn) => {
-	// 	if (err) {
-	// 		res.status(400).json(err);
-	// 		return;
-	// 	}
-	// 	conn.query(
-	// 		`SELECT id_product, SUM(quantity), id_order FROM ${table} GROUP BY id_product AND id_order`,
-	// 		(err, data) => {
-	// 			if (err) {
-	// 				res.status(400).json(err);
-	// 				return;
-	// 			}
-	// 			res.status(202).json(data);
-	// 		}
-	// 	);
-	// });
-};
-// Show the form for creating a new resource.
-controller.create = (req, res) => {
-	//
 };
 // Verify that there is an active order, and if there is not, create it.
 controller.status = (req, res) => {
@@ -134,10 +114,6 @@ controller.show = (req, res) => {
 			);
 		}
 	});
-};
-// Show the form for editing the specified resource.
-controller.edit = (req, res) => {
-	//
 };
 // Update the specified resource in storage.
 controller.update = (req, res) => {

@@ -7,7 +7,6 @@ const router = Router();
 const controller = require('../controllers/productController.js');
 
 router.get('/', controller.index);
-// router.get('/add', controller.create);
 router.post(
 	'/add',
 	body('summary').isLength({ min: 2 }),
@@ -15,7 +14,6 @@ router.post(
 	body('stock').isInt({ min: 0 }),
 	controller.store
 );
-// router.get('/update/:id', controller.edit);
 router.post('/update/:id', controller.update);
 router.get('/delete/:id', controller.destroy);
 

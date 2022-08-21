@@ -28,14 +28,6 @@ controller.create = async (req, res, data) => {
 controller.store = (req, res) => {
 	defaultController.Store(req, res, table);
 };
-// Display the specified resource.
-controller.show = (req, res) => {
-	//
-};
-// Show the form for editing the specified resource.
-controller.edit = (req, res) => {
-	//
-};
 // Update the specified resource in storage.
 controller.update = (req, res) => {
 	defaultController.Update(req, res, table);
@@ -62,10 +54,6 @@ controller.update = (req, res) => {
 			);
 		});
 	}
-};
-// Remove the specified resource from storage.
-controller.destroy = (req, res) => {
-	//
 };
 
 module.exports = controller;
