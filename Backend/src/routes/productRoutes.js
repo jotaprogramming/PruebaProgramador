@@ -7,6 +7,7 @@ const router = Router();
 const controller = require('../controllers/productController.js');
 
 router.get('/', controller.index);
+router.get('/show/:id', controller.show);
 router.post(
 	'/add',
 	body('summary').isLength({ min: 2 }),
