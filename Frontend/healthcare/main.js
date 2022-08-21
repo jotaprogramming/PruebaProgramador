@@ -16,7 +16,8 @@ let totalNeto = 0;
 let subTotal = 0;
 
 /**
- * It returns a string of HTML code that will be used to create a product item in the cart
+ * It returns a string that contains the HTML code of the product that is going to be displayed in the
+ * shopping cart
  * @returns A string with the HTML code of the product.
  */
 function GetElements({
@@ -27,6 +28,7 @@ function GetElements({
 	summary,
 	quantity,
 }) {
+	/* Calculating the total value of the products in the shopping cart. */
 	if (iva) {
 		totalNeto += (price + price * iva) * quantity;
 		subtotal += price * quantity;
@@ -116,9 +118,10 @@ async function GetCartProducts(indexProducts) {
 	Render(indexProducts, shoppingCart);
 }
 
+
 /**
- * It adds or removes the class 'modal__active' from the modal element, and adds or removes the class
- * 'index-container__inactive' from the container element
+ * It adds an event listener to the element passed in, and when the element is clicked, it toggles the
+ * modal's active class and the container's inactive class
  * @param element - The element that will be clicked to activate the modal.
  */
 function modalActive(element) {
@@ -136,6 +139,9 @@ function modalActive(element) {
 	}
 }
 
+/**
+ * If the receipt has the class of 'receipt__up', remove it. If it doesn't, add it
+ */
 function receiptActive() {
 	const receipt = document.getElementById('receipt');
 	if (receipt.classList.contains('receipt__up')) {
@@ -145,6 +151,10 @@ function receiptActive() {
 	}
 }
 
+/**
+ * The function adds an event listener to the angle button. When the button is clicked, the
+ * receiptActive function is called and the angle button is rotated
+ */
 function AngleListener() {
 	const angle = document.getElementById('angle');
 	angle.addEventListener('click', () => {
@@ -158,8 +168,7 @@ function AngleListener() {
 }
 
 /**
- * When the cart icon is clicked, the cart modal is displayed. When the close icon is clicked, the cart
- * modal is hidden.
+ * It takes the cart, close, and see_more elements and passes them to the modalActive function
  */
 function CartListener() {
 	const cart = document.getElementById('cart');
@@ -170,6 +179,13 @@ function CartListener() {
 	modalActive(see_more);
 }
 
+/**
+ * It takes the body of the form and the id of the product and sends it to the server to be stored in
+ * the database
+ * @param body - The body of the request.
+ * @param id - The id of the product you want to update.
+ * @returns A function that takes two parameters, body and id.
+ */
 const OrderStore = async (body, id) => {
 	try {
 		const result = await SetOrder(body, id);
@@ -182,6 +198,11 @@ const OrderStore = async (body, id) => {
 	}
 };
 
+/**
+ * It gets the element with the id 'pay', and if it exists, it adds an event listener to it, which,
+ * when clicked, gets the id of the order, creates a body with the status of the order, and then calls
+ * the OrderStore function, passing the body and the id of the order as parameters
+ */
 function Pay() {
 	const pay = document.getElementById('pay');
 	if (pay) {
@@ -227,6 +248,11 @@ function QuantityListener() {
 	});
 }
 
+/**
+ * It adds an event listener to each button with the class cart__addtocart, and when the button is
+ * clicked, it gets the quantity of the product and the id of the product, and then it sends a request
+ * to the server to store the product in the cart
+ */
 function AddToCartListener() {
 	const addtocartAll = document.querySelectorAll('.cart__addtocart');
 	const quantityAll = document.querySelectorAll('#quantity');
@@ -250,6 +276,12 @@ function AddToCartListener() {
 	});
 }
 
+/**
+ * It takes a body object, sends it to the AddToCart function, and if the result is saved, it calls the
+ * GetIndexProducts function
+ * @param body - {
+ * @returns A function that takes in a body and returns a boolean.
+ */
 const StoreCart = async (body) => {
 	try {
 		const result = await AddToCart(body);
@@ -276,8 +308,8 @@ const GetIndexProducts = async () => {
 };
 
 /**
- * It renders the shopping cart and the products on the page
- * @param index_products - the HTML for the products
+ * It renders the HTML code for the index page
+ * @param index_products - the products that are displayed on the index page
  * @param shopping_cart - the shopping cart component
  */
 function Render(index_products, shopping_cart) {

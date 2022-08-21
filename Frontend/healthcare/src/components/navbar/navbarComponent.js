@@ -1,18 +1,27 @@
 import './style.css';
 
+/* It adds the HTML to the component and then calls the menuListener function. */
 class navbarElement extends HTMLElement {
 	constructor() {
 		super();
 	}
+	/**
+	 * If the navbar has the class 'active-navbar', remove it, otherwise add it.
+	 */
 	menuListener() {
 		const menu = document.getElementById('menu');
 		menu.addEventListener('click', () => {
 			const navbar = document.getElementById('navbar');
+			/* Checking if the navbar has the class 'active-navbar'. */
 			navbar.classList.contains('active-navbar')
 				? navbar.classList.remove('active-navbar')
 				: navbar.classList.add('active-navbar');
 		});
 	}
+	/**
+	 * The function is called when the component is added to the DOM. It adds the HTML to the component
+	 * and then calls the menuListener function.
+	 */
 	connectedCallback() {
 		this.innerHTML = `
         <header class="index-header">

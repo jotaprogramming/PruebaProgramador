@@ -1,5 +1,7 @@
 import './style.css';
 
+/* It's a custom element that creates a card with a product image, a title, a price, and a button that
+adds the product to the cart. */
 class cardProduct extends HTMLElement {
 	constructor() {
 		super();
@@ -11,9 +13,19 @@ class cardProduct extends HTMLElement {
 		this.min = 1;
 		this.cartTemplate;
 	}
+	/**
+	 * It returns an array of attributes that the component will observe.
+	 * @returns An array of strings.
+	 */
 	static get observedAttributes() {
 		return ['id', 'summary', 'path', 'description', 'price', 'stock'];
 	}
+	/**
+	 * A function that is called when an attribute is changed.
+	 * @param attr - The name of the attribute that changed.
+	 * @param oldVal - The value of the attribute before the change.
+	 * @param newVal - The new value of the attribute.
+	 */
 	attributeChangedCallback(attr, oldVal, newVal) {
 		if (newVal != oldVal) {
 			switch (attr) {
@@ -35,6 +47,11 @@ class cardProduct extends HTMLElement {
 			}
 		}
 	}
+	/**
+	 * It returns a string of HTML code that contains a button with an id of "decrease", a span with an id
+	 * of "quantity", and a button with an id of "increase".
+	 * @returns The template literal is being returned.
+	 */
 	get CartTemplate() {
 		return `<div class="card__cart">
 			<div class="cart__quantity">
@@ -48,6 +65,9 @@ class cardProduct extends HTMLElement {
 		</div>`;
 	}
 	connectedCallback() {
+		/* Checking if the stock is 0, if it is, it sets the minimum to 0 and sets the cartTemplate to a div
+		with the class of soldout and the text of "Sin stock disponible". If the stock is not 0, it sets
+		the cartTemplate to the CartTemplate method. */
 		if (this.stock == 0) {
 			this.min = 0;
 			this.cartTemplate = `<div class="soldout">Sin stock disponible</div>`

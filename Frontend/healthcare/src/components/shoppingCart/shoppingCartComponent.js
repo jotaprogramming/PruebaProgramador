@@ -1,6 +1,6 @@
-import { GetShoppingCart } from '../../service/apiService.js';
 import './style.css';
 
+/* The class is a custom element that creates a modal window with a list of products and a receipt. */
 class shoppingCart extends HTMLElement {
 	constructor() {
 		super();
@@ -9,45 +9,10 @@ class shoppingCart extends HTMLElement {
 		this.test;
 		this.products = [];
 	}
-	GetElements({price, iva, product_id, image_path, summary, quantity}) {
-        let subtotal = 0;
-		if (iva) {
-            subtotal = price + price * iva;
-		} else {
-            console.log('YES')
-			subtotal = price;
-		}
-		// this.total += subtotal;
-		return `<div class="product__item" id="${product_id}">
-            <figure class="product__figure">
-                <img src="${image_path}" alt="" class="product__image">
-            </figure>
-            <div class="product__body">
-                <h4 class="product__summary">${summary}</h4>
-                <div class="product__info">
-                    <p class="product__quantity"><strong>Cantidad: </strong>${
-					quantity
-				}</p>
-                    <p class="procuct__price"><strong>Valor unidad: </strong>$${
-					price
-				}</p>
-                    <p class="procuct__total"><strong>Valor total: </strong>$${
-					price * quantity
-				}</p>
-                    <p class="product__shipping"><strong>Envío: </strong>$0</p>
-                </div>
-            </div>
-        </div>`;
-	}
-	GetCartProducts = async () => {
-		const products = await GetShoppingCart();
-		this.elements = (products || []).map(this.GetElements).join('\n');
-	};
-	connectedCallback() {
-        this.GetCartProducts();
-        console.log(this.elements);
-		// console.log(this.products);
-		// console.log(this.products[0]);
+	/**
+     * It takes the HTML template and adds it to the shadow DOM.
+     */
+    connectedCallback() {
 		this.innerHTML = `
         <div class="modal" id="modal">
             <div class="modal__card">
@@ -91,7 +56,6 @@ class shoppingCart extends HTMLElement {
             </div>
         </div>
         `;
-		// console.log(this.elements);
 	}
 }
 
