@@ -10,6 +10,9 @@ class cardProduct extends HTMLElement {
 		this.path;
 		this.price;
 		this.stock;
+		this.description;
+		this.type;
+		this.supplied;
 		this.min = 1;
 		this.cartTemplate;
 	}
@@ -18,7 +21,16 @@ class cardProduct extends HTMLElement {
 	 * @returns An array of strings.
 	 */
 	static get observedAttributes() {
-		return ['id', 'summary', 'path', 'description', 'price', 'stock'];
+		return [
+			'id',
+			'summary',
+			'path',
+			'description',
+			'price',
+			'stock',
+			'type',
+			'supplied',
+		];
 	}
 	/**
 	 * A function that is called when an attribute is changed.
@@ -43,6 +55,21 @@ class cardProduct extends HTMLElement {
 					break;
 				case 'stock':
 					this.stock = newVal;
+					break;
+				case 'description':
+					newVal != 'null'
+						? (this.description = newVal)
+						: (this.description = 'Sin descripción');
+					break;
+				case 'type':
+					newVal != 'null'
+						? (this.type = newVal)
+						: (this.type = 'Sin presentación');
+					break;
+				case 'supplied':
+					newVal != 'null'
+						? (this.supplied = newVal)
+						: (this.supplied = 'No especificada');
 					break;
 			}
 		}
@@ -70,7 +97,7 @@ class cardProduct extends HTMLElement {
 		the cartTemplate to the CartTemplate method. */
 		if (this.stock == 0) {
 			this.min = 0;
-			this.cartTemplate = `<div class="soldout">Sin stock disponible</div>`
+			this.cartTemplate = `<div class="soldout">Sin stock disponible</div>`;
 		} else {
 			this.cartTemplate = this.CartTemplate;
 		}
@@ -83,6 +110,11 @@ class cardProduct extends HTMLElement {
                 <h2 class="card__title">${this.summary}</h2>
                 <span class="card__price">$ ${this.price}</span>
                 ${this.cartTemplate}
+				<div class="card__extra">
+					<p class="card__description">${this.description}</p>
+					<p class="card__type">${this.type}</p>
+					<p class="card__supplied">Via de administración: ${this.supplied}</p>
+				</div>
             </div>
         </div>
         `;

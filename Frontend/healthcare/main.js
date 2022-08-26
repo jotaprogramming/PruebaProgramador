@@ -61,6 +61,8 @@ async function GetCartProducts(indexProducts) {
 
 	let msgTitle = products.length ? 'Carrito de compras' : 'Sin productos';
 	let msgSubtitle = products.length ? 'Agregaste:' : '';
+	totalNeto = 0;
+	subTotal = 0;
 	let elements = (products || []).map(GetElements).join('\n');
 
 	const shoppingCart = `
@@ -117,7 +119,6 @@ async function GetCartProducts(indexProducts) {
 	</div>`;
 	Render(indexProducts, shoppingCart);
 }
-
 
 /**
  * It adds an event listener to the element passed in, and when the element is clicked, it toggles the
@@ -179,6 +180,22 @@ function CartListener() {
 	modalActive(see_more);
 }
 
+function DetailsListener() {
+	const cards = document.querySelectorAll('.product__card');
+	cards.forEach((element, index) => {
+		element.addEventListener('click', () => {
+			const extra = document.querySelectorAll('.card__extra');
+			if (extra[index].classList.contains('card__active')) {
+				extra[index].classList.remove('card__active');
+				return;
+			} else {
+				extra[index].classList.add('card__active');
+				return;
+			}
+		});
+	});
+}
+
 /**
  * It takes the body of the form and the id of the product and sends it to the server to be stored in
  * the database
@@ -211,6 +228,8 @@ function Pay() {
 			const body = { status: 0 };
 			const store = OrderStore(JSON.stringify(body), id);
 			if (store) {
+				totalNeto = 0;
+				subTotal = 0;
 				alert('Orden guardada satisfactoriamente');
 			}
 		});
@@ -302,7 +321,15 @@ const GetIndexProducts = async () => {
 	const products = await GetProducts();
 	let elements = '';
 	products.forEach((product) => {
-		elements += `<cart-product id="${product.id}" summary="${product.summary}" path="${product.image_path}" price="${product.price}" stock="${product.stock}"></cart-product>`;
+		elements += `<cart-product 
+		id="${product.id}" 
+		summary="${product.summary}" 
+		path="${product.image_path}" 
+		price="${product.price}" 
+		stock="${product.stock}"
+		description="${product.description}" 
+		type="${product.type}" 
+		supplied="${product.supplied}"></cart-product>`;
 	});
 	GetCartProducts(elements);
 };
@@ -326,6 +353,7 @@ function Render(index_products, shopping_cart) {
     `;
 	QuantityListener();
 	AddToCartListener();
+	DetailsListener();
 	CartListener();
 	Pay();
 	AngleListener();

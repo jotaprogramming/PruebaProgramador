@@ -5,7 +5,19 @@ const table = 'product';
 
 // Display a listing of the resource.
 controller.index = (req, res) => {
-	defaultController.Index(req, res, table);
+	req.getConnection((err, conn) => {
+		if (err) {
+			res.status(400).json(err);
+		} else {
+			conn.query(`SELECT t.*, s.description AS supplied FROM ${table} AS t JOIN supplied AS s ON s.id = t.id_supplied`, (err, data) => {
+				if (err) {
+					res.status(400).json(err);
+					return
+				} 
+				res.json(data);
+			});
+		}
+	});
 };
 // Display the specified resource.
 controller.show = (req, res) => {

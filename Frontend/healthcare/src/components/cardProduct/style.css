@@ -2,7 +2,6 @@ cart-product{
     width: 100%;
     max-width: 1000px;
 }
-
 .product__card{
     display: flex;
     gap: 3rem;
@@ -19,7 +18,7 @@ cart-product{
     overflow: hidden;
 }
 .card__image{
-    height: 100%;
+    height: auto;
     width: 100%;
     object-fit: cover;
 }
@@ -80,6 +79,25 @@ button.quantity__item:hover{
 }
 .soldout{
     opacity: .5;
+}
+.card__extra{
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+}
+.card__description{
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.card__type{
+    text-transform: capitalize;
+}
+.card__supplied{
+    text-transform: capitalize;
+}
+.card__active{
+    display: flex !important;
 }
 @media (max-width: 900px) {
     .product__card{
